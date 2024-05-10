@@ -1,0 +1,8 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj",
+".\Objects\Conf_tny.obj",
+"..\user\RTOS\RTX51TNY.LIB" 
+TO ".\Objects\Pro" Rtx51Tiny 
+PRINT(".\Listings\Pro.m51") RAMSIZE(256) 
+CODE( 0X0000-0X3FFF )
+XDATA( 0X0000-0X00FF )

@@ -1,0 +1,122 @@
+C51 COMPILER V9.56.0.0   MAIN                                                              05/10/2024 16:47:53 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\user\main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listi
+                    -ngs\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          /**
+   2          *   ************************************************************************************
+   3          *               上海芯圣电子股份有限公司
+   4          *                   www.holychip.cn
+   5          * ************************************************************************************
+   6          * @Examle Version   V1.0.0.0
+   7          * @Demo   Version   V1.0.0.0
+   8          * @Date       2021.07.05
+   9          * ************************************************************************************
+  10          *                        客户服务
+  11          * 感谢您使用我们的单片机，若发现错误或对函数的使用存在疑问。请添加上海芯圣电子官方QQ群
+  12          * ****************************技术支持群：201030494***********************************
+  13          *   ************************************************************************************
+  14          **/
+  15          
+  16          #define ALLOCATE_EXTERN
+  17          #include "HC89S003AF4.h" 
+  18          #include "RTX51TNY.H"
+  19          
+  20          
+  21          #if 0 
+              void Delay_ms(unsigned int fui_i);    //延时函数
+              /***************************************************************************************
+                * @实现效果 对P00口进行高、低电平转换，LED1不断翻转
+              ***************************************************************************************/
+              void main()
+              {   
+                WDTCCR = 0x00;            //关闭看门狗
+                                          //本例程为方便测试关闭看门狗，实际使用中，建议客户打开看门狗，详见WDT复位
+                CLKSWR = 0x51;            //选择内部高频RC为系统时钟，内部高频RC 2分频，Fosc=16MHz
+                CLKDIV = 0x01;            //Fosc 1分频得到Fcpu，Fcpu=16MHz 
+                //
+                P0M0 = P0M0&0xF0|0x08;    //P00设置为推挽输出
+                //
+                while(1)
+                {
+                  P0_0= 0;
+                  Delay_ms(200);
+                  P0_0= 1;
+                  Delay_ms(200);
+                }
+              }
+              
+              void Delay_ms(unsigned int fui_i)
+              {
+                unsigned int fui_j;
+                for(;fui_i > 0;fui_i --)
+                for(fui_j = 1596;fui_j > 0;fui_j --);
+              }
+              #endif 
+  51          
+  52          
+  53          /*
+  54          task_create
+C51 COMPILER V9.56.0.0   MAIN                                                              05/10/2024 16:47:53 PAGE 2   
+
+  55          启动任务
+  56          */
+  57          void task_create(void) _task_ 0
+  58          {
+  59   1        //
+  60   1        WDTCCR = 0x00;            //关闭看门狗
+  61   1                                  //本例程为方便测试关闭看门狗，实际使用中，建议客户打开看门狗，详见WDT复位
+  62   1        CLKSWR = 0x51;            //选择内部高频RC为系统时钟，内部高频RC 2分频，Fosc=16MHz
+  63   1        CLKDIV = 0x01;            //Fosc 1分频得到Fcpu，Fcpu=16MHz 
+  64   1        //
+  65   1        P0M0 = P0M0&0xF0|0x08;    //P00设置为推挽输出
+  66   1        P2M0 = P2M0&0xF0|0x08;    //P20设置为推挽输出
+  67   1        //
+  68   1        os_create_task(1);      //创建任务1、2
+  69   1        os_create_task(2);
+  70   1        //
+  71   1        os_delete_task(0);      //删除任务0
+  72   1        while(1)
+  73   1        {
+  74   2          os_wait2(K_IVL,100);
+  75   2        }
+  76   1      }
+  77          
+  78          void task_1(void) _task_ 1
+  79          {
+  80   1        while(1)
+  81   1        {
+  82   2          P0_0 = !P0_0;
+  83   2          os_wait2(K_IVL,200);
+  84   2        }
+  85   1      }
+  86          
+  87          
+  88          void task_2(void) _task_ 2
+  89          {
+  90   1        while(1)
+  91   1        {
+  92   2          P2_0 = !P2_0;
+  93   2          os_wait2(K_IVL,100);
+  94   2        }
+  95   1      }
+  96          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     77    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
